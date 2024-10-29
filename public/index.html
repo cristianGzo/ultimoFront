@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <!-- jQuery Version 1.11.0 -->
+   <script src="/assets/js/jquery-1.11.0.js"></script>
     <link rel="icon" href="img/Fevicon.png" type="image/png">
     
 
@@ -31,6 +33,11 @@
    <!-- Morris Charts CSS -->
    <link href="/assets/css/plugins/morris.css" rel="stylesheet">
 
+   <link rel="stylesheet" type="text/css" media="all"
+        href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
+
+    
+
 
    
   </head>
@@ -39,8 +46,7 @@
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
-   <!-- jQuery Version 1.11.0 -->
-   <script src="/assets/js/jquery-1.11.0.js"></script>
+   
 
    <!-- Bootstrap Core JavaScript -->
    <script src="/assets/js/bootstrap.min.js"></script>
@@ -60,6 +66,7 @@
    <!-- DataTables JavaScript -->
    <script src="/assets/js/plugins/dataTables/jquery.dataTables.js"></script>
    <script src="/assets/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+   <script type="text/javascript" src="//cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
 
     
   </body>

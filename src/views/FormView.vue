@@ -10,7 +10,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">SB Admin v2.0</a>
+        <a class="navbar-brand" href="index.html">Avanzar</a>
     </div>
     <!-- /.navbar-header -->
 
@@ -346,6 +346,50 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-6">
+
+                            <h3>Marca</h3>
+                            <form role="form">
+                                <div class="form-group">
+                                    <label>Text Input</label>
+                                    <input class="form-control">
+                                    <p class="help-block">Example block-level help text here.</p>
+                                </div>
+                                
+                                
+                                <button type="submit" class="btn btn-primary">Submit Button</button>
+                                <!--<button type="reset" class="btn btn-primary">Reset Button</button>-->
+                            </form>
+
+                            <h3>Modelo</h3>
+                            <form role="form">
+                                <div class="form-group">
+                                    <label>Text Input</label>
+                                    <input class="form-control" placeholder="nombre de modelo">
+                                    <p class="help-block" >Example block-level help text here.</p>
+                                </div>
+                                <div class="form-group">
+                                    <label>Text Input with Placeholder</label>
+                                    <select id="disabledSelect" class="form-control"></select>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">Submit Button</button>
+                                <!--<button type="reset" class="btn btn-primary">Reset Button</button>-->
+                            </form>
+
+
+                            <h3>Categoria</h3>
+                            <form role="form">
+                                <div class="form-group">
+                                    <label>Text Input</label>
+                                    <input class="form-control" placeholder="nombre categoria">
+                                    <p class="help-block">Example block-level help text here.</p>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">Submit Button</button>
+                                <!--<button type="reset" class="btn btn-primary">Reset Button</button>-->
+                            </form>
+
+                            <h3>Dispositivo</h3>
                             <form role="form">
                                 <div class="form-group">
                                     <label>Text Input</label>
@@ -356,121 +400,44 @@
                                     <label>Text Input with Placeholder</label>
                                     <input class="form-control" placeholder="Enter text">
                                 </div>
-                                <div class="form-group">
-                                    <label>Static Control</label>
-                                    <p class="form-control-static">email@example.com</p>
-                                </div>
-                                <div class="form-group">
-                                    <label>File input</label>
-                                    <input type="file">
-                                </div>
-                                <div class="form-group">
-                                    <label>Text area</label>
-                                    <textarea class="form-control" rows="3"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label>Checkboxes</label>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" value="">Checkbox 1
-                                        </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" value="">Checkbox 2
-                                        </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" value="">Checkbox 3
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Inline Checkboxes</label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox">1
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox">2
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox">3
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Radio Buttons</label>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>Radio 1
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">Radio 2
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3">Radio 3
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Inline Radio Buttons</label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="option1" checked>1
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="option2">2
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">3
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label>Selects</label>
-                                    <select class="form-control">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Multiple Selects</label>
-                                    <select multiple class="form-control">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-default">Submit Button</button>
-                                <button type="reset" class="btn btn-default">Reset Button</button>
+                                
+                                <button type="submit" class="btn btn-primary">Submit Button</button>
+                                <!--<button type="reset" class="btn btn-primary">Reset Button</button>-->
                             </form>
+
+
+
+
                         </div>
                         <!-- /.col-lg-6 (nested) -->
                         <div class="col-lg-6">
-                            <h1>Disabled Form States</h1>
+                            <h1>Dispositivo</h1>
                             <form role="form">
-                                <fieldset disabled>
+                                <fieldset enabled>
                                     <div class="form-group">
-                                        <label for="disabledSelect">Disabled input</label>
-                                        <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input" disabled>
+                                        <label for="disabledSelect">No. serie</label>
+                                        <input class="form-control" id="enabledInput" type="text" placeholder="no serial" enabled>
                                     </div>
                                     <div class="form-group">
-                                        <label for="disabledSelect">Disabled select menu</label>
-                                        <select id="disabledSelect" class="form-control">
-                                            <option>Disabled select</option>
+                                        <label>Descripcion</label>
+                                        <input class="form-control" placeholder="descripcion">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Estado</label>
+                                        <input class="form-control" placeholder="estado">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="disabledSelect">Modelo</label>
+                                        <select id="disabledSelect" class="form-control" placeholder="modelo">
+                                            <option>modelo</option>
                                         </select>
                                     </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox">Disabled Checkbox
-                                        </label>
+                                    <div class="form-group">
+                                        <label for="disabledSelect">Categoria</label>
+                                        <select id="disabledSelect" class="form-control" placeholder="categoria">
+                                            <option>categoria</option>
+                                        </select>
                                     </div>
                                     <button type="submit" class="btn btn-primary">Disabled Button</button>
                                 </fieldset>
@@ -490,34 +457,7 @@
                                     <input type="text" class="form-control" id="inputError">
                                 </div>
                             </form>
-                            <h1>Input Groups</h1>
-                            <form role="form">
-                                <div class="form-group input-group">
-                                    <span class="input-group-addon">@</span>
-                                    <input type="text" class="form-control" placeholder="Username">
-                                </div>
-                                <div class="form-group input-group">
-                                    <input type="text" class="form-control">
-                                    <span class="input-group-addon">.00</span>
-                                </div>
-                                <div class="form-group input-group">
-                                    <span class="input-group-addon"><i class="fa fa-eur"></i>
-                                    </span>
-                                    <input type="text" class="form-control" placeholder="Font Awesome Icon">
-                                </div>
-                                <div class="form-group input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="text" class="form-control">
-                                    <span class="input-group-addon">.00</span>
-                                </div>
-                                <div class="form-group input-group">
-                                    <input type="text" class="form-control">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button"><i class="fa fa-search"></i>
-                                        </button>
-                                    </span>
-                                </div>
-                            </form>
+                            
                         </div>
                         <!-- /.col-lg-6 (nested) -->
                     </div>

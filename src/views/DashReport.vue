@@ -10,7 +10,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">SB Admin v2.0</a>
+        <a class="navbar-brand" href="index.html">Avanzar</a>
     </div>
     <!-- /.navbar-header -->
 
@@ -509,43 +509,7 @@
                                             <td>10/21/2013</td>
                                             <td>3:20 PM</td>
                                             <td>$234.34</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3324</td>
-                                            <td>10/21/2013</td>
-                                            <td>3:03 PM</td>
-                                            <td>$724.17</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3323</td>
-                                            <td>10/21/2013</td>
-                                            <td>3:00 PM</td>
-                                            <td>$23.71</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3322</td>
-                                            <td>10/21/2013</td>
-                                            <td>2:49 PM</td>
-                                            <td>$8345.23</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3321</td>
-                                            <td>10/21/2013</td>
-                                            <td>2:23 PM</td>
-                                            <td>$245.12</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3320</td>
-                                            <td>10/21/2013</td>
-                                            <td>2:15 PM</td>
-                                            <td>$5663.54</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3319</td>
-                                            <td>10/21/2013</td>
-                                            <td>2:13 PM</td>
-                                            <td>$943.45</td>
-                                        </tr>
+                                        </tr>                              
                                     </tbody>
                                 </table>
                             </div>
@@ -568,7 +532,7 @@
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <ul class="timeline">
+                   <!-- <ul class="timeline">
                         <li>
                             <div class="timeline-badge"><i class="fa fa-check"></i>
                             </div>
@@ -669,7 +633,7 @@
                                 </div>
                             </div>
                         </li>
-                    </ul>
+                    </ul>-->
                 </div>
                 <!-- /.panel-body -->
             </div>
@@ -748,7 +712,7 @@
             </div>
             <!-- /.panel -->
             <div class="chat-panel panel panel-default">
-                <div class="panel-heading">
+                <!--<div class="panel-heading">
                     <i class="fa fa-comments fa-fw"></i>
                     Chat
                     <div class="btn-group pull-right">
@@ -784,10 +748,10 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div>-->
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <ul class="chat">
+                    <!--<ul class="chat">
                         <li class="left clearfix">
                             <span class="chat-img pull-left">
                                 <img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" />
@@ -849,10 +813,10 @@
                                 </p>
                             </div>
                         </li>
-                    </ul>
+                    </ul>-->
                 </div>
                 <!-- /.panel-body -->
-                <div class="panel-footer">
+                <!--<div class="panel-footer">
                     <div class="input-group">
                         <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
                         <span class="input-group-btn">
@@ -861,7 +825,7 @@
                             </button>
                         </span>
                     </div>
-                </div>
+                </div>-->
                 <!-- /.panel-footer -->
             </div>
             <!-- /.panel .chat-panel -->
@@ -873,24 +837,6 @@
 <!-- /#page-wrapper -->
 
 </div>
-
-
-<!-- Bootstrap core JavaScript-
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-<-- Core plugin JavaScript--
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-<f-- Custom scripts for all pages--
-<script src="js/sb-admin-2.min.js"></script>
-
-<-- Page level plugins --
-<script src="vendor/chart.js/Chart.min.js"></script>
-
-<-- Page level custom scripts 
-<script src="js/demo/chart-area-demo.js"></script>
-<script src="js/demo/chart-pie-demo.js"></script>-->
 
 
 </template>
