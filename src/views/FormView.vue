@@ -348,10 +348,10 @@
                         <div class="col-lg-6">
 
                             <h3>Marca</h3>
-                            <form role="form">
+                            <form role="form" @submit.prevent="submitForm">
                                 <div class="form-group">
                                     <label>Text Input</label>
-                                    <input class="form-control">
+                                    <input class="form-control" v-model="form.name" id="brand">
                                     <p class="help-block">Example block-level help text here.</p>
                                 </div>
                                 
@@ -475,3 +475,32 @@
 
 </div>
 </template>    
+
+
+<script>
+    import apiR from '@/axios';
+
+    export default{
+        data(){
+            return {
+                form:{
+                    name:''
+                }
+            };
+        },
+        methods: {
+            async submitForm(){
+                try{
+                    const response = await apiR.post('http://localhost:8000/api/brand', this.form);
+                    console.log('Datos insertados:', response.data);
+                    this.resetForm();
+                }catch(error){
+                    console.error('Error al enviar, error')
+                }
+            },
+            resetForm() {
+            this.form.name = '';
+    }
+        }
+    }
+</script>
