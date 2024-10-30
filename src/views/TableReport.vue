@@ -239,7 +239,7 @@
                     <!-- /input-group -->
                 </li>
                 <li>
-                    <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                    <a href="dash"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
@@ -254,10 +254,10 @@
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
-                    <a class="active" href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
+                    <a class="active" href="tables"><i class="fa fa-table fa-fw"></i> Tables</a>
                 </li>
                 <li>
-                    <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
+                    <a href="forms"><i class="fa fa-edit fa-fw"></i> Forms</a>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
@@ -317,7 +317,7 @@
                             <a href="blank.html">Blank Page</a>
                         </li>
                         <li>
-                            <a href="login.html">Login Page</a>
+                            <a href="login">Login Page</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
@@ -345,6 +345,7 @@
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
+                    <select name="anio" id="anios" style="width: 23%"></select>
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                             <thead>
@@ -357,27 +358,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="odd gradeX">
-                                    <td>Trident</td>
-                                    <td>Internet Explorer 4.0</td>
-                                    <td>Win 95+</td>
-                                    <td class="center">4</td>
-                                    <td class="center">X</td>
-                                </tr>
-                                <tr class="even gradeC">
-                                    <td>Trident</td>
-                                    <td>Internet Explorer 5.0</td>
-                                    <td>Win 95+</td>
-                                    <td class="center">5</td>
-                                    <td class="center">C</td>
-                                </tr>
-                                <tr class="odd gradeA">
-                                    <td>Trident</td>
-                                    <td>Internet Explorer 5.5</td>
-                                    <td>Win 95+</td>
-                                    <td class="center">5.5</td>
-                                    <td class="center">A</td>
-                                </tr>
+                                
                                 
                             </tbody>
                         </table>
@@ -707,7 +688,7 @@ import apiR from '@/axios';
         methods:{
             async loadReport(){
                 try{
-                    const response=await apiR.get('/api/reports/')
+                    const response=await apiR.get('http://localhost:8000/api/reports/')
                     this.initDataTable(response.data.data);
             
                 } catch(error){
@@ -726,7 +707,16 @@ import apiR from '@/axios';
                     {data: 'ShipLabelTimeStamp'},
         ]
                     });              
-    }
+    },
+    //peticion segunda para anios en el select
+            async loadAnio(){
+                try{
+                    const res=await apiR.get('http://localhost:8000/api/year')
+                    res.data.data;
+                }catch(error){
+                    console.error('Eror al obtener los anios')
+                }
+            }
             }
                 
         };
