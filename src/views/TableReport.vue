@@ -387,11 +387,11 @@
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
-                        <input
-                                type="number"
-                                v-model="total"
-                                placeholder="Ingresa el total"
-                                @input="calculatePercentages"/>
+                        <input type="number" v-model="total" placeholder="Ingresa el total" @input="calculatePercentages" />
+                        <input type="date" v-model="startDate" placeholder="Fecha de inicio" @change="loadTotal">
+                        <input type="date" v-model="endDate" placeholder="Fecha de fin" @change="loadTotal">
+                        <input type="time" v-model="startTime" placeholder="Hora de inicio">
+                        <input type="time" v-model="endTime" placeholder="Hora de fin">
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover" id="totales">
                                 <thead>
@@ -627,7 +627,6 @@
 
 <script>
 import apiR from '@/axios';
-//import { onMounted } from 'vue';
 
 // $(document).ready(init);
 export default {
@@ -643,6 +642,10 @@ export default {
             categorias: [],
             total: 0,
             showPercentage: false,
+            startDate: this.getDefaultStartDate(),
+            endDate: this.getCurrentDate(),
+            startTime: '',
+            endTime: '',
         };
     },
 
@@ -659,7 +662,7 @@ export default {
     },
     mounted() {
         this.loadReport(),
-        this.loadTotal()
+            this.loadTotal()
     },
     methods: {
         async loadReport() {
@@ -696,6 +699,10 @@ export default {
                 initComplete: function () {
                     // Agrega filtros personalizados usando `$.fn.dataTable.ext.search.push`
                     $.fn.dataTable.ext.search.push(function (settings, rowData) {
+                        if (settings.nTable.id !== 'dataTables-example') {
+                            return true; // Si no es la tabla correcta, omitir el filtro
+                        }
+
                         const code = rowData[1];
                         const pos3Filter = vm.filterPos3;
                         const pos7Filter = vm.filterPos7;
@@ -708,6 +715,7 @@ export default {
 
                         return matchPos3 && matchPos7 && matchPos1; // Retorna verdadero si coinciden ambos filtros
                     });
+                    //vm.table.draw();
                 },
             });
 
@@ -715,15 +723,33 @@ export default {
 
         async loadTotal() {
             try {
-                const response = await apiR.get('http://localhost:8000/api/total');
+                console.log({
+                    start_date: this.startDate,
+                    end_date: this.endDate,
+                    start_time: this.startTime,
+                    end_time: this.endTime,
+                });
+                const response = await apiR.get('http://localhost:8000/api/total', {
+                    params: {
+                        start_date: this.startDate,
+                        end_date: this.endDate,
+                        start_time: this.startTime,
+                        end_time: this.endTime,
+                    },
+                });
                 this.categorias = response.data.data;
 
                 this.categorias = this.categorias.map(item => ({
-                ...item,
-                Porcentaje: 0 
-        }));
-                this.initializeTableTotal();
-                
+                    ...item,
+                    Porcentaje: 0
+                }));
+                if (!this.tableTotales) {
+                    this.initializeTableTotal();
+                } else {
+                    
+                    this.tableTotales.clear().rows.add(this.categorias).draw();
+                }
+
             } catch (error) {
                 console.log("FUNCIONA");
                 console.error('Error al cargar los datos', error);
@@ -731,7 +757,7 @@ export default {
         },
         initializeTableTotal() {
             //const vm = this;
-            this.table = $('#totales').DataTable({
+            this.tableTotales = $('#totales').DataTable({
                 data: this.categorias,
                 columns: [{
                         data: 'Categoria'
@@ -740,7 +766,8 @@ export default {
                         data: 'Total'
                     },
                     {
-                        data: 'Porcentaje', visible: false
+                        data: 'Porcentaje',
+                        visible: false
                     },
                 ],
             });
@@ -748,28 +775,37 @@ export default {
 
         calculatePercentages() {
             if (this.total > 0) {
-            this.categorias = this.categorias.map((item) => {
-                return {
-                    ...item,
-                    Porcentaje: ((item.Total / this.total) * 100).toFixed(2),
-                };
-            });
-            this.table.clear().rows.add(this.categorias).draw();
-            this.showPercentage = true; // Muestra la columna de porcentaje
-            this.table.column(2).visible(true); // Asegúrate de que la columna de porcentaje esté visible
-        } else {
-            
-            this.categorias = this.categorias.map((item) => {
-                return {
-                    ...item,
-                    Porcentaje: 0,
-                };
-            });
-            this.table.clear().rows.add(this.categorias).draw();
-            this.showPercentage = false; // Oculta la columna de porcentaje
-            this.table.column(2).visible(false); // Asegúrate de que la columna de porcentaje esté oculta
-        }
-    },
+                this.categorias = this.categorias.map((item) => {
+                    return {
+                        ...item,
+                        Porcentaje: ((item.Total / this.total) * 100).toFixed(2),
+                    };
+                });
+                this.tableTotales.clear().rows.add(this.categorias).draw();
+                this.showPercentage = true; // Muestra la columna de porcentaje
+                this.tableTotales.column(2).visible(true); // Asegúrate de que la columna de porcentaje esté visible
+            } else {
+
+                this.categorias = this.categorias.map((item) => {
+                    return {
+                        ...item,
+                        Porcentaje: 0,
+                    };
+                });
+                this.tableTotales.clear().rows.add(this.categorias).draw();
+                this.showPercentage = false; // Oculta la columna de porcentaje
+                this.tableTotales.column(2).visible(false); // Asegúrate de que la columna de porcentaje esté oculta
+            }
+        },
+        getDefaultStartDate() {
+            const date = new Date();
+            date.setMonth(date.getMonth() - 1); // un mes atrás
+            return date.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+        },
+        getCurrentDate() {
+            const date = new Date();
+            return date.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+        },
 
     }
 
