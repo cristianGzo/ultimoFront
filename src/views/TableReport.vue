@@ -345,7 +345,12 @@
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <select name="anio" id="anios" style="width: 23%"></select>
+                    <!-- <select name="anio" id="anios" style="width: 23%"></select>-->
+                    <input type="text" v-model="filter1and2" placeholder="Char1-2" size="3" maxlength="2"/>
+                    <input type="text" v-model="filterPos3" placeholder="Char3" size="3" maxlength="1" />
+                    <input type="text" v-model="filterPos7" placeholder="Char7" size="3" maxlength="1"/>
+                    
+
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                             <thead>
@@ -358,15 +363,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
-                                
+                                   
                             </tbody>
                         </table>
                     </div>
                     <!-- /.table-responsive -->
                     <div class="well">
                         <h4>DataTables Usage Information</h4>
-                        <p>DataTables is a very flexible, advanced tables plugin for jQuery. In SB Admin, we are using a specialized version of DataTables built for Bootstrap 3. We have also customized the table headings to use Font Awesome icons in place of images. For complete documentation on DataTables, visit their website at <a target="_blank" href="https://datatables.net/">https://datatables.net/</a>.</p>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde culpa laudantium <a target="_blank" href="">http</a>.</p>
                         <a class="btn btn-default btn-lg btn-block" target="_blank" href="https://datatables.net/">View DataTables Documentation</a>
                     </div>
                 </div>
@@ -381,39 +385,30 @@
         <div class="col-lg-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Kitchen Sink
+                    Total
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
+                    <input
+                                type="number"
+                                v-model="total"
+                                placeholder="Ingresa el total"
+                                @input="calculatePercentages"/>
+                                <input type="date" v-model="startDate" placeholder="Fecha de inicio" @change="() => { loadTotal(); loadReport(); }">
+                                <input type="date" v-model="endDate" placeholder="Fecha de fin" @change="() => { loadTotal(); loadReport(); }">
+                                <input type="time" v-model="startTime" placeholder="Hora de inicio">
+                                <input type="time" v-model="endTime" placeholder="Hora de fin">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover">
+                        <table class="table table-striped table-bordered table-hover" id="totales">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Username</th>
+                                    <th>Category</th>
+                                    <th>Total</th>
+                                    <th v-if="showPercentage">Porcentaje</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
+                               
                             </tbody>
                         </table>
                     </div>
@@ -448,18 +443,7 @@
                                     <td>Otto</td>
                                     <td>@mdo</td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -497,18 +481,7 @@
                                     <td>Otto</td>
                                     <td>@mdo</td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -543,18 +516,7 @@
                                     <td>Otto</td>
                                     <td>@mdo</td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -592,18 +554,7 @@
                                     <td>Otto</td>
                                     <td>@mdo</td>
                                 </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -644,18 +595,7 @@
                                     <td>Thornton</td>
                                     <td>@fat</td>
                                 </tr>
-                                <tr class="warning">
-                                    <td>3</td>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                <tr class="danger">
-                                    <td>4</td>
-                                    <td>John</td>
-                                    <td>Smith</td>
-                                    <td>@jsmith</td>
-                                </tr>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -681,33 +621,190 @@ import apiR from '@/axios';
 
   // $(document).ready(init);
     export default{
-       
-        mounted(){
-            this.loadReport()
+
+        data(){
+            return{
+                //filtros
+                filterPos3: "",
+                filterPos7: "",
+                filter1and2: "",
+                table: null,
+
+            //tbl total
+                categorias: [],
+                total: 0,
+                showPercentage: false,
+                startDate: this.getDefaultStartDate(),
+                endDate: this.getCurrentDate(),
+                startTime: '',
+                endTime: '',
+            };
         },
-        methods:{
-            async loadReport(){
-                try{
-                    const response=await apiR.get('http://localhost:8000/api/reports/')
-                    this.initDataTable(response.data.data);
-            
-                } catch(error){
+        watch: {
+            filterPos3() {
+            this.table.draw();
+            },
+            filterPos7() {
+            this.table.draw();
+            },
+            filter1and2() {
+            this.table.draw();
+            },
+        },
+        mounted() {
+            this.loadReport(),
+            this.loadTotal()
+        },
+        methods: {
+        async loadReport() {
+            try {
+                const response = await apiR.get('http://localhost:8000/api/reports/', {
+                    params: {
+                        start_date: this.startDate,
+                        end_date: this.endDate,
+                        start_time: this.startTime,
+                        end_time: this.endTime,
+                    },
+                });
+                this.initDataTable(response.data.data);
+
+            } catch (error) {
                 console.error('error en la request')
             }
+        },
+
+        initDataTable(data) {
+            if (this.table) {
+               
+               this.table.clear().rows.add(data).draw();
+           } else {
+            const vm = this;
+            this.table = $('#dataTables-example').DataTable({
+                data: data,
+                columns: [{
+                        data: 'SERIAL_NUMBER'
+                    },
+                    {
+                        data: 'BUILD_CODE'
+                    },
+                    {
+                        data: 'CREATE_TS'
+                    },
+                    {
+                        data: 'ShipSerial'
+                    },
+                    {
+                        data: 'ShipLabelTimeStamp'
+                    },
+                ],
+        initComplete: function () {
+                    
+                    $.fn.dataTable.ext.search.push(function (settings, rowData) {
+                        if (settings.nTable.id !== 'dataTables-example') {
+                                return true; 
+                            }
+                        
+                        const code = rowData[1];
+                        const pos3Filter = vm.filterPos3;
+                        const pos7Filter = vm.filterPos7;
+                        const pos1Filter = vm.filter1and2;
+
+                        // Condicion de filtro en posiciones 3 y 7
+                        const matchPos3 = pos3Filter ? code[2] === pos3Filter : true;
+                        const matchPos7 = pos7Filter ? code[6] === pos7Filter : true;
+                        const matchPos1 = pos1Filter ? code.substring(0, 2) === pos1Filter : true;
+
+                        return matchPos3 && matchPos7 && matchPos1; 
+                    });
                 },
-                
-                initDataTable(data){
-                    $('#dataTables-example').DataTable({
-                        data: data,
-                        columns:[
-                    {data: 'SERIAL_NUMBER'},
-                    {data: 'BUILD_CODE'},
-                    {data: 'CREATE_TS'},
-                    {data: 'ShipSerial'},
-                    {data: 'ShipLabelTimeStamp'},
-        ]
-                    });              
+                          }); 
+                          }             
     },
+
+
+    async loadTotal() {
+            try {
+                const response = await apiR.get('http://localhost:8000/api/total',{
+                    params: {
+                        start_date: this.startDate,
+                        end_date: this.endDate,
+                        start_time: this.startTime,
+                        end_time: this.endTime,
+                },
+                });
+                    
+                this.categorias = response.data.data;
+
+                this.categorias = this.categorias.map(item => ({
+                ...item,
+                Porcentaje: 0 
+        }));
+                
+                if (!this.tableTotales) {
+                    this.initializeTableTotal();
+                } else {
+                    
+                    this.tableTotales.clear().rows.add(this.categorias).draw();
+                }
+                
+            } catch (error) {
+                console.log("FUNCIONA");
+                console.error('Error al cargar los datos', error);
+            }
+        },
+        initializeTableTotal() {
+            //const vm = this;
+            this.tableTotales = $('#totales').DataTable({
+                data: this.categorias,
+                columns: [{
+                        data: 'Categoria'
+                    },
+                    {
+                        data: 'Total'
+                    },
+                    {
+                        data: 'Porcentaje', visible: false
+                    },
+                ],
+            });
+        },
+
+        calculatePercentages() {
+            if (this.total > 0) {
+            this.categorias = this.categorias.map((item) => {
+                return {
+                    ...item,
+                    Porcentaje: ((item.Total / this.total) * 100).toFixed(2),
+                };
+            });
+            this.tableTotales.clear().rows.add(this.categorias).draw();
+            this.showPercentage = true; 
+            this.tableTotales.column(2).visible(true); 
+        } else {
+            
+            this.categorias = this.categorias.map((item) => {
+                return {
+                    ...item,
+                    Porcentaje: 0,
+                };
+            });
+            this.tableTotales.clear().rows.add(this.categorias).draw();
+            this.showPercentage = false; 
+            this.tableTotales.column(2).visible(false); 
+        }
+    },
+
+    getDefaultStartDate() {
+            const date = new Date();
+            date.setMonth(date.getMonth() - 1); // un mes atrás
+            return date.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+        },
+        getCurrentDate() {
+            const date = new Date();
+            return date.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+        },
+
+    
     //peticion segunda para anios en el select
             async loadAnio(){
                 try{

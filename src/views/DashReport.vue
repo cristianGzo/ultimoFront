@@ -411,7 +411,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-3">
-                            <i class="fa fa-support fa-5x"></i>
+                            <i class="fa fa-shopping-cart fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
                             <div class="huge">13</div>
@@ -455,11 +455,18 @@
                         </div>
                     </div>
                 </div>
+
+
+
                 <!-- /.panel-heading -->
                 <div class="panel-body">
-                    <div id="morris-area-chart"></div>
+                    <div id="morrisG2"></div>
+                    
                 </div>
                 <!-- /.panel-body -->
+
+
+
             </div>
             <!-- /.panel -->
             <div class="panel panel-default">
@@ -513,10 +520,16 @@
                             </div>
                             <!-- /.table-responsive -->
                         </div>
+
+
                         <!-- /.col-lg-4 (nested) -->
-                        <div class="col-lg-8">
-                            <div id="morris-bar-chart"></div>
+                        <div class="col-lg-12">
+                            <div id="morrisG"></div>
                         </div>
+                        
+                        
+
+
                         <!-- /.col-lg-8 (nested) -->
                     </div>
                     <!-- /.row -->
@@ -842,3 +855,108 @@
 
 
 </template>
+
+<script>
+   // import apiR from '@/axios';
+   import apiR from '@/axios';
+  
+
+  export default {
+      data() {
+          return {
+              categorias: [],
+              totales:[],
+          };
+      },
+  
+      methods: {
+          async loadTotal() {
+              try {
+                  const response = await apiR.get('http://localhost:8000/api/total?start_date=2024-10-30&end_date=2024-10-30', {
+                      params: {
+                          start_date: this.startDate,
+                          end_date: this.endDate,
+                          start_time: this.startTime,
+                          end_time: this.endTime,
+                      },
+                  });
+  
+                  this.categorias = response.data.data.map(item => ({
+                      label: item.Categoria,
+                      value: item.Total
+                  }));
+  
+                  this.renderChart();
+              } catch (error) {
+                  console.error('Error en la solicitud:', error);
+              }
+          },
+  
+          renderChart() {
+              
+              $('#morrisG').empty();
+              /* eslint-disable no-undef */
+              new Morris.Bar({
+                  element: 'morrisG',
+                  data: this.categorias,
+                  xkey: 'label',
+                  ykeys: ['value'],
+                  labels: ['Total'],
+                  resize: true, 
+                  barColors: ['#0b62a4'],
+              });
+          },
+
+
+          async loadMes() {
+              try {
+                  const response = await apiR.get('http://localhost:8000/api/mProx?start_date=2024-09-23&end_date=2024-10-30', {
+                      params: {
+                          start_date: this.startDate,
+                          end_date: this.endDate,
+                          start_time: this.startTime,
+                          end_time: this.endTime,
+                      },
+                  });
+  
+                  this.totales = response.data.data.map(item => ({
+                      label: item.dia,
+                      value: item.Total
+                  }));
+  
+                  this.renderChartM();
+              } catch (error) {
+                  console.error('Error en la solicitud:', error);
+              }
+          },
+  
+          renderChartM() {
+              
+              $('#morrisG2').empty();
+              /* eslint-disable no-undef */
+              new Morris.Area({
+                  element: 'morrisG2',
+                  data: this.totales,
+                  xkey:  'label', 
+                  lineColors: ['#1D97f1','#D58665'],
+                  ykeys: ['value'],
+                  labels: ['Total'],
+                  resize: true, 
+                  barColors: ['#0b62a4'],
+              });
+          },
+
+
+      },
+
+
+
+
+      mounted() {
+          this.loadTotal(); 
+          this.loadMes();
+      },
+  }
+
+
+</script>

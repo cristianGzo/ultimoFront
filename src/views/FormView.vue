@@ -239,7 +239,7 @@
                     <!-- /input-group -->
                 </li>
                 <li>
-                    <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                    <a href="dash"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
@@ -254,7 +254,7 @@
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
-                    <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
+                    <a href="tables"><i class="fa fa-table fa-fw"></i> Tables</a>
                 </li>
                 <li>
                     <a class="active" href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
@@ -317,7 +317,7 @@
                             <a href="blank.html">Blank Page</a>
                         </li>
                         <li>
-                            <a href="login.html">Login Page</a>
+                            <a href="login">Login Page</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
