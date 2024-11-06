@@ -239,7 +239,7 @@
                         <!-- /input-group -->
                     </li>
                     <li>
-                        <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                        <a href="dash"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
@@ -248,7 +248,7 @@
                                 <a href="flot.html">Flot Charts</a>
                             </li>
                             <li>
-                                <a href="morris.html">Morris.js Charts</a>
+                                <a href="morris">Morris.js Charts</a>
                             </li>
                         </ul>
                         <!-- /.nav-second-level -->
@@ -345,9 +345,9 @@
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
+                        <input type="text" v-model="filter1and2" placeholder="char1-2" size="3" maxlength="2" />
                         <input type="text" v-model="filterPos3" placeholder="char3" size="3" maxlength="1">
                         <input type="text" v-model="filterPos7" placeholder="char7" size="3" maxlength="1" />
-                        <input type="text" v-model="filter1and2" placeholder="char1-2" size="3" maxlength="2" />
 
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
@@ -388,8 +388,8 @@
                     <!-- /.panel-heading -->
                     <div class="panel-body">
                         <input type="number" v-model="total" placeholder="Ingresa el total" @input="calculatePercentages" />
-                        <input type="date" v-model="startDate" placeholder="Fecha de inicio" @change="loadTotal">
-                        <input type="date" v-model="endDate" placeholder="Fecha de fin" @change="loadTotal">
+                        <input type="date" v-model="startDate" placeholder="Fecha de inicio" @change="() => { loadTotal(); loadReport(); }">
+                        <input type="date" v-model="endDate" placeholder="Fecha de fin" @change="() => { loadTotal(); loadReport(); }">
                         <input type="time" v-model="startTime" placeholder="Hora de inicio">
                         <input type="time" v-model="endTime" placeholder="Hora de fin">
                         <div class="table-responsive">
@@ -667,7 +667,14 @@ export default {
     methods: {
         async loadReport() {
             try {
-                const response = await apiR.get('http://localhost:8000/api/reports/')
+                const response = await apiR.get('http://localhost:8000/api/reports/', {
+                    params: {
+                        start_date: this.startDate,
+                        end_date: this.endDate,
+                        start_time: this.startTime,
+                        end_time: this.endTime,
+                    },
+                });
                 this.initDataTable(response.data.data);
 
             } catch (error) {
@@ -676,59 +683,64 @@ export default {
         },
 
         initDataTable(data) {
-            const vm = this;
-            this.table = $('#dataTables-example').DataTable({
-                data: data,
-                columns: [{
-                        data: 'SERIAL_NUMBER'
-                    },
-                    {
-                        data: 'BUILD_CODE'
-                    },
-                    {
-                        data: 'CREATE_TS'
-                    },
-                    {
-                        data: 'ShipSerial'
-                    },
-                    {
-                        data: 'ShipLabelTimeStamp'
-                    },
-                ],
+            if (this.table) {
+               
+                this.table.clear().rows.add(data).draw();
+            } else {
+                const vm = this;
+                this.table = $('#dataTables-example').DataTable({
+                    data: data,
+                    columns: [{
+                            data: 'SERIAL_NUMBER'
+                        },
+                        {
+                            data: 'BUILD_CODE'
+                        },
+                        {
+                            data: 'CREATE_TS'
+                        },
+                        {
+                            data: 'ShipSerial'
+                        },
+                        {
+                            data: 'ShipLabelTimeStamp'
+                        },
+                    ],
 
-                initComplete: function () {
-                    // Agrega filtros personalizados usando `$.fn.dataTable.ext.search.push`
-                    $.fn.dataTable.ext.search.push(function (settings, rowData) {
-                        if (settings.nTable.id !== 'dataTables-example') {
-                            return true; // Si no es la tabla correcta, omitir el filtro
-                        }
+                    initComplete: function () {
+                        // Agrega filtros personalizados usando `$.fn.dataTable.ext.search.push`
+                        $.fn.dataTable.ext.search.push(function (settings, rowData) {
+                            if (settings.nTable.id !== 'dataTables-example') {
+                                return true; // Si no es la tabla correcta, omitir el filtro
+                            }
 
-                        const code = rowData[1];
-                        const pos3Filter = vm.filterPos3;
-                        const pos7Filter = vm.filterPos7;
-                        const pos1Filter = vm.filter1and2;
+                            const code = rowData[1];
+                            const pos3Filter = vm.filterPos3;
+                            const pos7Filter = vm.filterPos7;
+                            const pos1Filter = vm.filter1and2;
 
-                        // Condiciones de filtro en posiciones 3 y 7
-                        const matchPos3 = pos3Filter ? code[2] === pos3Filter : true;
-                        const matchPos7 = pos7Filter ? code[6] === pos7Filter : true;
-                        const matchPos1 = pos1Filter ? code.substring(0, 2) === pos1Filter : true;
+                            // Condiciones de filtro en posiciones 3 y 7
+                            const matchPos3 = pos3Filter ? code[2] === pos3Filter : true;
+                            const matchPos7 = pos7Filter ? code[6] === pos7Filter : true;
+                            const matchPos1 = pos1Filter ? code.substring(0, 2) === pos1Filter : true;
 
-                        return matchPos3 && matchPos7 && matchPos1; // Retorna verdadero si coinciden ambos filtros
-                    });
-                    //vm.table.draw();
-                },
-            });
+                            return matchPos3 && matchPos7 && matchPos1; // Retorna verdadero si coinciden ambos filtros
+                        });
+                        
+                    },
+                });
+            }
 
         },
 
         async loadTotal() {
             try {
-                console.log({
-                    start_date: this.startDate,
-                    end_date: this.endDate,
-                    start_time: this.startTime,
-                    end_time: this.endTime,
-                });
+                /* console.log({
+                     start_date: this.startDate,
+                     end_date: this.endDate,
+                     start_time: this.startTime,
+                     end_time: this.endTime,
+                 });*/
                 const response = await apiR.get('http://localhost:8000/api/total', {
                     params: {
                         start_date: this.startDate,
@@ -746,7 +758,7 @@ export default {
                 if (!this.tableTotales) {
                     this.initializeTableTotal();
                 } else {
-                    
+
                     this.tableTotales.clear().rows.add(this.categorias).draw();
                 }
 
