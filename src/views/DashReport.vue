@@ -456,7 +456,7 @@
 
                     <!-- /.panel-heading -->
                     <div class="panel-body">
-                        <div id="morrisG"></div>
+                        <div id="morrisG2"></div>
                     </div>
 
                     <!-- /.panel-body -->
@@ -517,11 +517,13 @@
                                 </div>
                                 <!-- /.table-responsive -->
                             </div>
+
                             <!-- /.col-lg-4 (nested) -->
-                            <div class="col-lg-8">
-                                <div id="morris-bar-chart"></div>
+                            <div class="col-lg-12">
+                                <div id="morrisG"></div>
                             </div>
                             <!-- /.col-lg-8 (nested) -->
+
                         </div>
                         <!-- /.row -->
                     </div>
@@ -843,12 +845,12 @@
 
 <script>
 import apiR from '@/axios';
-  
 
 export default {
     data() {
         return {
             categorias: [],
+            totales: [],
         };
     },
 
@@ -876,7 +878,7 @@ export default {
         },
 
         renderChart() {
-            
+
             $('#morrisG').empty();
             /* eslint-disable no-undef */
             new Morris.Bar({
@@ -885,13 +887,69 @@ export default {
                 xkey: 'label',
                 ykeys: ['value'],
                 labels: ['Total'],
-                resize: true, // gráfico se ajusta al tamaño de la ventana
+                resize: true,
                 barColors: ['#0b62a4'],
             });
-        }
+        },
+
+        async loadMes() {
+            try {
+                const response = await apiR.get('http://localhost:8000/api/mProx?start_date=2024-10-01&end_date=2024-11-10', {
+                    params: {
+                        start_date: this.startDate,
+                        end_date: this.endDate,
+                        start_time: this.startTime,
+                        end_time: this.endTime,
+                    },
+                });
+
+                const transformedData = {};
+                response.data.data.forEach((item) => {
+                    const dia = item.dia;
+                    if (!transformedData[dia]) {
+                        transformedData[dia] = {
+                            label: dia,
+                            X: 0,
+                            F: 0
+                        }; // Iniciar valores en 0
+                    }
+                    transformedData[dia][item.Color] = item.Total;
+                });
+
+                this.totales = Object.values(transformedData);
+
+                /*this.totales = response.data.data.map(item => ({
+                    label: item.dia,
+                    value: item.Total
+                }));*/
+
+                this.renderChartM();
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+            }
+        },
+
+        renderChartM() {
+
+            $('#morrisG2').empty();
+            /* eslint-disable no-undef */
+            new Morris.Area({
+                element: 'morrisG2',
+                data: this.totales,
+                xkey: 'label',                
+                ykeys: ['X', 'F'],                
+                labels: ['Color X', 'Color F'],
+                lineColors: ['#1D97f1', '#D58665'],
+                resize: true,
+               // barColors: ['#0b62a4'],
+            });
+        },
+
     },
+
     mounted() {
-        this.loadTotal(); // Cargar los datos cuando se monta el componente
+        this.loadTotal();
+        this.loadMes();
     },
 }
 </script>
