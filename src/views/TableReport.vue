@@ -424,22 +424,21 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Username</th>
+                                        <th>Categoria</th>
+                                        <th>Total</th>
+                                        <th>Porcentaje (%)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
+                                    <tr v-for="category in filteredCategories" :key="category.Categoria">
+                                        <td>{{ category.Categoria }}</td>
+                                        <td>{{ category.Total }}</td>
+                                        <td>{{ category.Porcentaje }}</td>
                                     </tr>
 
                                 </tbody>
                             </table>
+                            
                         </div>
                         <!-- /.table-responsive -->
                     </div>
@@ -475,13 +474,6 @@
                                         <td>Otto</td>
                                         <td>@mdo</td>
                                     </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-
                                 </tbody>
                             </table>
                         </div>
@@ -516,13 +508,7 @@
                                         <td>Otto</td>
                                         <td>@mdo</td>
                                     </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-
+                                    
                                 </tbody>
                             </table>
                         </div>
@@ -560,13 +546,7 @@
                                         <td>Otto</td>
                                         <td>@mdo</td>
                                     </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-
+                                    
                                 </tbody>
                             </table>
                         </div>
@@ -601,12 +581,7 @@
                                         <td>Otto</td>
                                         <td>@mdo</td>
                                     </tr>
-                                    <tr class="info">
-                                        <td>2</td>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
+                                   
 
                                 </tbody>
                             </table>
@@ -626,6 +601,8 @@
 </template>
 
 <script>
+ // eslint-disable-next-line
+import DataTableComponent from '@/components/DataFilterComponent.vue';
 import apiR from '@/axios';
 
 // $(document).ready(init);
@@ -646,6 +623,11 @@ export default {
             endDate: this.getCurrentDate(),
             startTime: '',
             endTime: '',
+
+            //componentTable
+            dataTableData: [],
+            filteredTotal: 0, // Total de registros que cumplen con los filtros
+            filteredCategories: [], 
         };
     },
 
@@ -678,7 +660,8 @@ export default {
                 this.initDataTable(response.data.data);
 
             } catch (error) {
-                console.error('error en la request')
+                console.error('error en la request', error)
+                
             }
         },
 
@@ -708,6 +691,8 @@ export default {
                     ],
 
                     initComplete: function () {
+
+                        vm.initialTotal = data.length;
                         // Agrega filtros personalizados usando `$.fn.dataTable.ext.search.push`
                         $.fn.dataTable.ext.search.push(function (settings, rowData) {
                             if (settings.nTable.id !== 'dataTables-example') {
@@ -724,10 +709,20 @@ export default {
                             const matchPos7 = pos7Filter ? code[6] === pos7Filter : true;
                             const matchPos1 = pos1Filter ? code.substring(0, 2) === pos1Filter : true;
 
+
+                            if (vm.table) {
+                                vm.calculateFilteredTotals();
+                            }
+
+
                             return matchPos3 && matchPos7 && matchPos1; // Retorna verdadero si coinciden ambos filtros
                         });
-                        
                     },
+                    drawCallback: function () {
+                   if (vm.table) {
+                    vm.calculateFilteredTotals();
+    }
+                },
                 });
             }
 
@@ -819,7 +814,35 @@ export default {
             return date.toISOString().split('T')[0]; // 'YYYY-MM-DD'
         },
 
+
+
+        calculateFilteredTotals() {
+            const filteredData = this.table.rows({ filter: 'applied' }).data().toArray();
+            this.filteredTotal = filteredData.length;
+
+            const categoryCounts = filteredData.reduce((acc, row) => {
+                const category = row.BUILD_CODE; // Ajusta según tu campo de categoría
+                acc[category] = (acc[category] || 0) + 1;
+                return acc;
+            }, {});
+
+            this.filteredCategories = Object.keys(categoryCounts).map(category => ({
+                Categoria: category,
+                Total: categoryCounts[category],
+                Porcentaje: ((categoryCounts[category] / this.initialTotal) * 100).toFixed(2),
+            }));
+        },
+
+        
+
+    },
+    //COMPONENT
+    computed:{
+        filteredData() {
+      // Obtiene solo los datos aplicados con filtros
+      return this.table.rows({ filter: 'applied' }).data().toArray();
     }
+    },
 
 };
 </script>
