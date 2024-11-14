@@ -257,6 +257,9 @@
                         <a class="active" href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
                     </li>
                     <li>
+                        <a href="Proyeccion"><i class="fa fa-edit fa-fw"></i> Forms Proyeccion</a>
+                    </li>
+                    <li>
                         <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
                     </li>
                     <li>
@@ -644,7 +647,7 @@ export default {
     },
     mounted() {
         this.loadReport(),
-            this.loadTotal()
+        this.loadTotal()
     },
     methods: {
         async loadReport() {
@@ -832,8 +835,6 @@ export default {
                 Porcentaje: ((categoryCounts[category] / this.initialTotal) * 100).toFixed(2),
             }));
         },
-
-        
 
     },
     //COMPONENT

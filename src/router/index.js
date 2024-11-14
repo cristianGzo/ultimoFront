@@ -4,6 +4,7 @@ import LoginView from '@/views/LoginView.vue';
 import DashReport from '@/views/DashReport.vue';
 import TableReport from '@/views/TableReport.vue';
 import FormView from '@/views/FormView.vue';
+import proView from '@/views/ProyeccionView.vue';
 
 const routes = [
   {
@@ -27,9 +28,14 @@ const routes = [
             component: TableReport 
           },
           {
+            path: '/proyeccion', 
+            name: 'Proyeccion', 
+            component:  proView
+          },
+          {
             path: '/forms', 
             name: 'Form', 
-            component: FormView 
+            component: FormView
           },
         ]
       },
