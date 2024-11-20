@@ -114,7 +114,7 @@
 
                                 </tbody>
                             </table>
-                            
+
                         </div>
                         <!-- /.table-responsive -->
                     </div>
@@ -135,14 +135,14 @@
                     <div class="panel-body">
 
                         <select name="proyecciones" v-model="selectedItem">
-                                            <option value="" disabled>Selecciona una categoría</option>
-                                            <option v-for="item in items" :key="item.id" :value="item.id">
-                                                {{ item.startDate }}
-                                            </option>
-                                        </select>
+                            <option value="" disabled>Selecciona una categoría</option>
+                            <option v-for="item in items" :key="item.id" :value="item.id">
+                                {{ item.startDate }}
+                            </option>
+                        </select>
 
                         <div class="table-responsive">
-                            <table class="table table-striped" id="proyeccion" >
+                            <table class="table table-striped" id="proyeccion">
                                 <thead>
                                     <tr>
                                         <th>Category</th>
@@ -186,7 +186,7 @@
                                         <td>Otto</td>
                                         <td>@mdo</td>
                                     </tr>
-                                    
+
                                 </tbody>
                             </table>
                         </div>
@@ -224,7 +224,7 @@
                                         <td>Otto</td>
                                         <td>@mdo</td>
                                     </tr>
-                                    
+
                                 </tbody>
                             </table>
                         </div>
@@ -259,7 +259,6 @@
                                         <td>Otto</td>
                                         <td>@mdo</td>
                                     </tr>
-                                   
 
                                 </tbody>
                             </table>
@@ -272,6 +271,13 @@
             </div>
             <!-- /.col-lg-6 -->
         </div>
+
+        <div>
+            <h1>Dashboard</h1>
+            <!-- Aquí usas el componente -->
+            <WeeklySales />
+        </div>
+
         <!-- /.row -->
     </div>
     <!-- /#page-wrapper -->
@@ -279,15 +285,17 @@
 </template>
 
 <script>
- // eslint-disable-next-line
+// eslint-disable-next-line
 import DataTableComponent from '@/components/DataFilterComponent.vue';
+import WeeklySales from "@/components/ProyeccionTableComponent.vue";
 import NavBarComponent from '@/components/NavBarComponent.vue';
 import apiR from '@/axios';
 
 // $(document).ready(init);
 export default {
     components: {
-        NavBarComponent  
+        NavBarComponent,
+        WeeklySales,
     },
     data() {
         return {
@@ -309,7 +317,7 @@ export default {
             //componentTable
             dataTableData: [],
             filteredTotal: 0, // Total de registros que cumplen con los filtros
-            filteredCategories: [], 
+            filteredCategories: [],
 
             //proyeccion
             items: [],
@@ -330,7 +338,8 @@ export default {
     },
     mounted() {
         this.loadReport(),
-        this.loadTotal()
+            this.loadTotal(),
+            this.loadProyec()
     },
     methods: {
         async loadReport() {
@@ -347,13 +356,13 @@ export default {
 
             } catch (error) {
                 console.error('error en la request', error)
-                
+
             }
         },
 
         initDataTable(data) {
             if (this.table) {
-               
+
                 this.table.clear().rows.add(data).draw();
             } else {
                 const vm = this;
@@ -395,20 +404,18 @@ export default {
                             const matchPos7 = pos7Filter ? code[6] === pos7Filter : true;
                             const matchPos1 = pos1Filter ? code.substring(0, 2) === pos1Filter : true;
 
-
                             if (vm.table) {
                                 vm.calculateFilteredTotals();
                             }
-
 
                             return matchPos3 && matchPos7 && matchPos1; // Retorna verdadero si coinciden ambos filtros
                         });
                     },
                     drawCallback: function () {
-                   if (vm.table) {
-                    vm.calculateFilteredTotals();
-    }
-                },
+                        if (vm.table) {
+                            vm.calculateFilteredTotals();
+                        }
+                    },
                 });
             }
 
@@ -462,18 +469,17 @@ export default {
         },
         async loadProyec() {
             try {
-                 const response1= await apiR.get('http://localhost:8000/api/salesProjection');
-                const response = await apiR.get('http://localhost:8000/api/total', {
+                const response1 = await apiR.get('http://localhost:8000/api/salesProjection');
+                /*const response = await apiR.get('http://localhost:8000/api/total', {
                     params: {
                         start_date: this.startDate,
                         end_date: this.endDate,
                         start_time: this.startTime,
                         end_time: this.endTime,
                     },
-                });
-                
+                });*/
 
-                this.items=response1.data.data;
+                this.items = response1.data.data;
                 if (!this.tableTotales) {
                     this.initializeTblProycPrueba();
                 } else {
@@ -537,11 +543,10 @@ export default {
             const date = new Date();
             return date.toISOString().split('T')[0]; // 'YYYY-MM-DD'
         },
-
-
-
         calculateFilteredTotals() {
-            const filteredData = this.table.rows({ filter: 'applied' }).data().toArray();
+            const filteredData = this.table.rows({
+                filter: 'applied'
+            }).data().toArray();
             this.filteredTotal = filteredData.length;
 
             const categoryCounts = filteredData.reduce((acc, row) => {
@@ -557,13 +562,19 @@ export default {
             }));
         },
 
+        calculateCurrentWeek() {
+
+        }
+
     },
     //COMPONENT
-    computed:{
+    computed: {
         filteredData() {
-      // Obtiene solo los datos aplicados con filtros
-      return this.table.rows({ filter: 'applied' }).data().toArray();
-    }
+            // Obtiene solo los datos aplicados con filtros
+            return this.table.rows({
+                filter: 'applied'
+            }).data().toArray();
+        }
     },
 
 };
