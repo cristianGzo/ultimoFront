@@ -24,6 +24,11 @@
                         <input type="text" v-model="filter1and2" placeholder="char1-2" size="3" maxlength="2" />
                         <input type="text" v-model="filterPos3" placeholder="char3" size="3" maxlength="1">
                         <input type="text" v-model="filterPos7" placeholder="char7" size="3" maxlength="1" />
+                        <p></p>
+                        <input type="date" v-model="startDate" placeholder="Fecha de inicio" @change="() => { loadTotal(); loadReport(); }">
+                        <input type="date" v-model="endDate" placeholder="Fecha de fin" @change="() => { loadTotal(); loadReport(); }">
+                        <input type="time" v-model="startTime" placeholder="Hora de inicio">
+                        <input type="time" v-model="endTime" placeholder="Hora de fin">
 
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
@@ -64,10 +69,7 @@
                     <!-- /.panel-heading -->
                     <div class="panel-body">
                         <input type="number" v-model="total" placeholder="Ingresa el total" @input="calculatePercentages" />
-                        <input type="date" v-model="startDate" placeholder="Fecha de inicio" @change="() => { loadTotal(); loadReport(); }">
-                        <input type="date" v-model="endDate" placeholder="Fecha de fin" @change="() => { loadTotal(); loadReport(); }">
-                        <input type="time" v-model="startTime" placeholder="Hora de inicio">
-                        <input type="time" v-model="endTime" placeholder="Hora de fin">
+                        
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover" id="totales">
                                 <thead>
@@ -103,6 +105,7 @@
                                         <th>Categoria</th>
                                         <th>Total</th>
                                         <th>Porcentaje (%)</th>
+                                        <th>Porcentaje Categoria (%)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -110,6 +113,8 @@
                                         <td>{{ category.Categoria }}</td>
                                         <td>{{ category.Total }}</td>
                                         <td>{{ category.Porcentaje }}</td>
+                                        <td>{{ category.Porcentaje1and2 }}</td>
+                                        
                                     </tr>
 
                                 </tbody>
@@ -126,12 +131,14 @@
         </div>
         <!-- /.row -->
         <div class="row">
-            <div class="col-lg-6">
+
+            <WeeklySales />
+            <!--<div class="col-lg-6">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         Prueba proyecciones
                     </div>
-                    <!-- /.panel-heading -->
+                
                     <div class="panel-body">
 
                         <select name="proyecciones" v-model="selectedItem">
@@ -155,85 +162,19 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!-- /.table-responsive -->
+                        
                     </div>
-                    <!-- /.panel-body -->
+                    
                 </div>
-                <!-- /.panel -->
-            </div>
+                
+            </div>-->
             <!-- /.col-lg-6 -->
-            <div class="col-lg-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Bordered Table
-                    </div>
-                    <!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <div class="table-responsive table-bordered">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Username</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.table-responsive -->
-                    </div>
-                    <!-- /.panel-body -->
-                </div>
-                <!-- /.panel -->
-            </div>
+            
             <!-- /.col-lg-6 -->
         </div>
         <!-- /.row -->
         <div class="row">
-            <div class="col-lg-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Hover Rows
-                    </div>
-                    <!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Username</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.table-responsive -->
-                    </div>
-                    <!-- /.panel-body -->
-                </div>
-                <!-- /.panel -->
-            </div>
+            
             <!-- /.col-lg-6 -->
             <div class="col-lg-6">
                 <div class="panel panel-default">
@@ -271,12 +212,12 @@
             </div>
             <!-- /.col-lg-6 -->
         </div>
-
+<!--
         <div>
             <h1>Dashboard</h1>
-            <!-- Aquí usas el componente -->
+           
             <WeeklySales />
-        </div>
+        </div> -->
 
         <!-- /.row -->
     </div>
@@ -318,6 +259,7 @@ export default {
             dataTableData: [],
             filteredTotal: 0, // Total de registros que cumplen con los filtros
             filteredCategories: [],
+            total12: 0,
 
             //proyeccion
             items: [],
@@ -327,19 +269,25 @@ export default {
 
     watch: {
         filterPos3() {
-            this.table.draw();
+            this.table.draw();            
         },
         filterPos7() {
             this.table.draw();
         },
         filter1and2() {
             this.table.draw();
+            const filter12=this.table.rows({
+                filter: 'applied'
+            }).data().toArray();
+            this.total12=filter12.length;
+            console.log(this.total12);
+            this.calculateFilteredTotals();
         },
     },
     mounted() {
         this.loadReport(),
-            this.loadTotal(),
-            this.loadProyec()
+            this.loadTotal()
+           // this.loadProyec()
     },
     methods: {
         async loadReport() {
@@ -467,17 +415,17 @@ export default {
                 ],
             });
         },
-        async loadProyec() {
+        /*async loadProyec() {
             try {
                 const response1 = await apiR.get('http://localhost:8000/api/salesProjection');
-                /*const response = await apiR.get('http://localhost:8000/api/total', {
+                const response = await apiR.get('http://localhost:8000/api/total', {
                     params: {
                         start_date: this.startDate,
                         end_date: this.endDate,
                         start_time: this.startTime,
                         end_time: this.endTime,
                     },
-                });*/
+                });
 
                 this.items = response1.data.data;
                 if (!this.tableTotales) {
@@ -508,7 +456,7 @@ export default {
                     },
                 ],
             });
-        },
+        },*/
 
         calculatePercentages() {
             if (this.total > 0) {
@@ -550,7 +498,7 @@ export default {
             this.filteredTotal = filteredData.length;
 
             const categoryCounts = filteredData.reduce((acc, row) => {
-                const category = row.BUILD_CODE; // Ajusta según tu campo de categoría
+                const category = row.BUILD_CODE; // según campo de categoría
                 acc[category] = (acc[category] || 0) + 1;
                 return acc;
             }, {});
@@ -559,12 +507,12 @@ export default {
                 Categoria: category,
                 Total: categoryCounts[category],
                 Porcentaje: ((categoryCounts[category] / this.initialTotal) * 100).toFixed(2),
+                Porcentaje1and2: this.total12 
+                ? ((categoryCounts[category] / this.total12) * 100).toFixed(2) // Respecto al primer filtro
+                : null,
+                
             }));
         },
-
-        calculateCurrentWeek() {
-
-        }
 
     },
     //COMPONENT

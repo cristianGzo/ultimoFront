@@ -74,7 +74,7 @@ export default {
         async loadWeeks() {
             try {
                 // Servicio para obtener las semanas disponibles
-                const response = await apiR.get("http://localhost:8000/api/salesProjection");
+                const response = await apiR.get("http://localhost:8000/api/week");
                 this.weeks = response.data.data;
                 
                 //this.value = response.data.data[0] ?.value || 0;
@@ -96,7 +96,7 @@ export default {
                         end_date: this.selectedWeek.endDate,
                     },
                 });
-                this.categoryTotals = response.data.data; // Actualiza los datos de la tabla
+                this.categoryTotals = response.data.data; // Actualiza los datos de la tabla                
                 this.categoryTotals = response.data.data.map((total) => ({
                     ...total,
                     Porcentaje: ((total.Total / this.value) * 100).toFixed(2), // Calcula el porcentaje con dos decimales
