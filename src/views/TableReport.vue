@@ -24,11 +24,13 @@
                         <input type="text" v-model="filter1and2" placeholder="char1-2" size="3" maxlength="2" />
                         <input type="text" v-model="filterPos3" placeholder="char3" size="3" maxlength="1">
                         <input type="text" v-model="filterPos7" placeholder="char7" size="3" maxlength="1" />
+                        <!--<input type="text" v-model="filterH1" placeholder="char7" size="3" maxlength="1" />
+                        <input type="text" v-model="filterH2" placeholder="char7" size="3" maxlength="1" />-->
                         <p></p>
                         <input type="date" v-model="startDate" placeholder="Fecha de inicio" @change="() => { loadTotal(); loadReport(); }">
                         <input type="date" v-model="endDate" placeholder="Fecha de fin" @change="() => { loadTotal(); loadReport(); }">
-                        <input type="time" v-model="startTime" placeholder="Hora de inicio">
-                        <input type="time" v-model="endTime" placeholder="Hora de fin">
+                        <input type="time" v-model="startTime" placeholder="Hora de inicio" @change="() => { loadTotal(); loadReport(); }">
+                        <input type="time" v-model="endTime" placeholder="Hora de fin" @change="() => { loadTotal(); loadReport(); }">
 
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
@@ -212,12 +214,6 @@
             </div>
             <!-- /.col-lg-6 -->
         </div>
-<!--
-        <div>
-            <h1>Dashboard</h1>
-           
-            <WeeklySales />
-        </div> -->
 
         <!-- /.row -->
     </div>
@@ -244,6 +240,8 @@ export default {
             filterPos3: "",
             filterPos7: "",
             filter1and2: "",
+            filterH1:"",
+            filterH2:"",
             table: null,
 
             //tbl total
@@ -252,8 +250,8 @@ export default {
             showPercentage: false,
             startDate: this.getDefaultStartDate(),
             endDate: this.getCurrentDate(),
-            startTime: '',
-            endTime: '',
+            startTime: '00:00:00',
+            endTime: '23:59:59',
 
             //componentTable
             dataTableData: [],

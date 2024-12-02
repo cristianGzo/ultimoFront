@@ -23,8 +23,8 @@
                                 <i class="fa fa-comments fa-5x"></i>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <div class="huge">26</div>
-                                <div>New Comments!</div>
+                                <div class="huge">{{ products.product1 }}</div>
+                                <div>Red!</div>
                             </div>
                         </div>
                     </div>
@@ -45,8 +45,8 @@
                                 <i class="fa fa-tasks fa-5x"></i>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <div class="huge">12</div>
-                                <div>New Tasks!</div>
+                                <div class="huge">{{products.product2}}</div>
+                                <div>Black!</div>
                             </div>
                         </div>
                     </div>
@@ -532,6 +532,10 @@ export default {
         return {
             categorias: [],
             totales: [],
+            products: {
+                product1: 0,
+                product2: 0,
+        },
         };
     },
 
@@ -626,11 +630,22 @@ export default {
             });
         },
 
+        async loadDia(){
+            try{
+                const response=await apiR.get('http://localhost:8000/api/dProx');
+                this.products.product1=response.data.data[0].Total ||0;
+                this.products.product2=response.data.data[1].Total ||0;
+            }catch(error){
+                console.log('Se ha producido un error: ', error);
+            }
+           
+        },
     },
 
     mounted() {
         this.loadTotal();
         this.loadMes();
+        this.loadDia();
     },
 }
 </script>

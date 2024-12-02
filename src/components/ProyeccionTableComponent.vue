@@ -10,7 +10,7 @@
             <select name="proyecciones" v-model="selectedWeek" @change="loadCategoryTotals">
                 <option value="" disabled>Selecciona una semana</option>
                 <option v-for="week in weeks" :key="week.id" :value="week">
-                    {{ week.startDate }} - {{ week.endDate }}
+                    {{ week.startW }} - {{ week.endW }}
                 </option>
             </select>
 
@@ -74,7 +74,7 @@ export default {
         async loadWeeks() {
             try {
                 // Servicio para obtener las semanas disponibles
-                const response = await apiR.get("http://localhost:8000/api/week");
+                const response = await apiR.get("http://localhost:8000/api/weekTest");
                 this.weeks = response.data.data;
                 
                 //this.value = response.data.data[0] ?.value || 0;
@@ -92,8 +92,8 @@ export default {
             try {
                 const response = await apiR.get("http://localhost:8000/api/total", {
                     params: {
-                        start_date: this.selectedWeek.startDate,
-                        end_date: this.selectedWeek.endDate,
+                        start_date: this.selectedWeek.startW,
+                        end_date: this.selectedWeek.endW,
                     },
                 });
                 this.categoryTotals = response.data.data; // Actualiza los datos de la tabla                
