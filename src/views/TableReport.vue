@@ -116,9 +116,7 @@
                                         <td>{{ category.Total }}</td>
                                         <td>{{ category.Porcentaje }}</td>
                                         <td>{{ category.Porcentaje1and2 }}</td>
-                                        
                                     </tr>
-
                                 </tbody>
                             </table>
 

@@ -135,7 +135,12 @@
                     <div class="panel-body">
                         <div id="morrisG2"></div>
                     </div>
+                    <div>
 
+                    </div>
+                    <div class="panel-body">
+                        <div id="morrisCreated"></div>
+                    </div>
                     <!-- /.panel-body -->
                 </div>
                 <!-- /.panel -->
@@ -148,6 +153,9 @@
                                     Actions
                                     <span class="caret"></span>
                                 </button>
+                                <input type="date" v-model="startDate" placeholder="Fecha de inicio" @change="() => { loadMes(); loadCreateMes(); }">
+                                <input type="date" v-model="endDate" placeholder="Fecha de fin" @change="() => { loadMes(); loadCreateMes(); }">
+
                                 <ul class="dropdown-menu pull-right" role="menu">
                                     <li><a href="#">Action</a>
                                     </li>
@@ -532,11 +540,21 @@ export default {
         return {
             categorias: [],
             totales: [],
+            startDate: getDefaultStartDate(),
+            endDate: getCurrentDate(),
+            startTime: '00:00:00',
+            endTime: '23:59:59',
             products: {
                 product1: 0,
                 product2: 0,
         },
         };
+    },
+    mounted() {
+        this.loadTotal();
+        this.loadMes();
+        this.loadDia();
+        this.loadCreateMes();
     },
 
     methods: {
@@ -579,7 +597,7 @@ export default {
 
         async loadMes() {
             try {
-                const response = await apiR.get('http://localhost:8000/api/mProx?start_date=2024-10-01&end_date=2024-11-10', {
+                const response = await apiR.get('http://localhost:8000/api/mProx/', {
                     params: {
                         start_date: this.startDate,
                         end_date: this.endDate,
@@ -629,6 +647,58 @@ export default {
                // barColors: ['#0b62a4'],
             });
         },
+        async loadCreateMes() {
+            try {
+                const response = await apiR.get('http://localhost:8000/api/mCreatedProx/', {
+                    params: {
+                        start_date: this.startDate,
+                        end_date: this.endDate,
+                        start_time: this.startTime,
+                        end_time: this.endTime,
+                    },
+                });
+
+                const transformedData = {};
+                response.data.data.forEach((item) => {
+                    const dia = item.dia;
+                    if (!transformedData[dia]) {
+                        transformedData[dia] = {
+                            label: dia,
+                            X: 0,
+                            F: 0
+                        }; // Iniciar valores en 0
+                    }
+                    transformedData[dia][item.Color] = item.Total;
+                });
+
+                this.totales = Object.values(transformedData);
+
+                /*this.totales = response.data.data.map(item => ({
+                    label: item.dia,
+                    value: item.Total
+                }));*/
+
+                this.renderChartCreateM();
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+            }
+        },
+
+        renderChartCreateM() {
+
+            $('#morrisCreated').empty();
+            /* eslint-disable no-undef */
+            new Morris.Area({
+                element: 'morrisCreated',
+                data: this.totales,
+                xkey: 'label',                
+                ykeys: ['X', 'F'],                
+                labels: ['Color X', 'Color F'],
+                lineColors: ['#1D97f1', '#D58665'],
+                resize: true,
+               // barColors: ['#0b62a4'],
+            });
+        },
 
         async loadDia(){
             try{
@@ -641,11 +711,16 @@ export default {
            
         },
     },
-
-    mounted() {
-        this.loadTotal();
-        this.loadMes();
-        this.loadDia();
-    },
+        
+   
 }
+function getDefaultStartDate() {
+            const date = new Date();
+            date.setMonth(date.getMonth() - 1); // un mes atrás
+            return date.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+        }
+        function getCurrentDate() {
+            const date = new Date();
+            return date.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+        }
 </script>
