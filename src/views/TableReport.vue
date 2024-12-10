@@ -71,7 +71,7 @@
                     <!-- /.panel-heading -->
                     <div class="panel-body">
                         <input type="number" v-model="total" placeholder="Ingresa el total" @input="calculatePercentages" />
-                        
+
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover" id="totales">
                                 <thead>
@@ -138,7 +138,7 @@
                     <div class="panel-heading">
                         Prueba proyecciones
                     </div>
-                
+
                     <div class="panel-body">
 
                         <select name="proyecciones" v-model="selectedItem">
@@ -162,19 +162,19 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                     </div>
-                    
+
                 </div>
-                
+
             </div>-->
             <!-- /.col-lg-6 -->
-            
+
             <!-- /.col-lg-6 -->
         </div>
         <!-- /.row -->
         <div class="row">
-            
+
             <!-- /.col-lg-6 -->
             <div class="col-lg-6">
                 <div class="panel panel-default">
@@ -238,9 +238,10 @@ export default {
             filterPos3: "",
             filterPos7: "",
             filter1and2: "",
-            filterH1:"",
-            filterH2:"",
+            filterH1: "",
+            filterH2: "",
             table: null,
+            isTableInitial: false, //  ESTO SE AGREGO PARA MOUNTED
 
             //tbl total
             categorias: [],
@@ -264,28 +265,47 @@ export default {
     },
 
     watch: {
-        filterPos3() {
-            this.table.draw();            
+        activeFilters: {
+            deep: true,
+            handler() {
+                if (!this.isTableInitial) {
+                    console.log("Tabla no inicializada");
+                    return;
+                }
+                this.applyFilters();
+            }
+        }
+        /*filterPos3() {
+            this.table.draw();
         },
         filterPos7() {
             this.table.draw();
         },
         filter1and2() {
             this.table.draw();
-            const filter12=this.table.rows({
+            const filter12 = this.table.rows({
                 filter: 'applied'
             }).data().toArray();
-            this.total12=filter12.length;
+            this.total12 = filter12.length;
             console.log(this.total12);
             this.calculateFilteredTotals();
-        },
+        },*/
     },
     mounted() {
         this.loadReport(),
             this.loadTotal()
-           // this.loadProyec()
+        // this.loadProyec()
     },
     methods: {
+        applyFilters() {
+            if (!this.table) {
+                console.warn("Tabla no inicializada");
+                return;
+            }
+            this.table.draw(); // Redibuja la tabla aplicando los filtros
+            this.calculateFilteredTotals(); // Actualiza los totales después de aplicar los filtros
+        },
+
         async loadReport() {
             try {
                 const response = await apiR.get('http://localhost:8000/api/reports/', {
@@ -296,7 +316,8 @@ export default {
                         end_time: this.endTime,
                     },
                 });
-                this.initDataTable(response.data.data);
+               await this.initDataTable(response.data.data);
+               this.isTableInitial = true;
 
             } catch (error) {
                 console.error('error en la request', error)
@@ -305,63 +326,74 @@ export default {
         },
 
         initDataTable(data) {
-            if (this.table) {
+            return new Promise((resolve, reject) => {
+                if (this.table) {
 
-                this.table.clear().rows.add(data).draw();
-            } else {
-                const vm = this;
-                this.table = $('#dataTables-example').DataTable({
-                    data: data,
-                    columns: [{
-                            data: 'SERIAL_NUMBER'
+                    this.table.clear().rows.add(data).draw();
+                    resolve();
+                } else {
+                    const vm = this;
+                    this.isTableInitial = false;
+                    this.table = $('#dataTables-example').DataTable({
+                        data: data,
+                        columns: [{
+                                data: 'SERIAL_NUMBER'
+                            },
+                            {
+                                data: 'BUILD_CODE'
+                            },
+                            {
+                                data: 'CREATE_TS'
+                            },
+                            {
+                                data: 'ShipSerial'
+                            },
+                            {
+                                data: 'ShipLabelTimeStamp'
+                            },
+                        ],
+
+                        initComplete: function () {
+
+                            vm.initialTotal = data.length;
+                            vm.isTableInitial = true;
+                            resolve();
+                            // Agrega filtros personalizados usando `$.fn.dataTable.ext.search.push`
+                            $.fn.dataTable.ext.search.push(function (settings, rowData) {
+                                if (settings.nTable.id !== 'dataTables-example') {
+                                    return true; // Si no es la tabla correcta, omitir el filtro
+                                }
+                                console.log(rowData);
+                               
+                               const code = rowData[1];
+                                const pos3Filter = vm.filterPos3;
+                                const pos7Filter = vm.filterPos7;
+                                const pos1Filter = vm.filter1and2;
+
+                                // Condiciones de filtro en posiciones 3 y 7
+                                const matchPos3 = pos3Filter ? code[2] === pos3Filter : true;
+                                const matchPos7 = pos7Filter ? code[6] === pos7Filter : true;
+                                const matchPos1 = pos1Filter ? code.substring(0, 2) === pos1Filter : true;
+
+                                if (vm.table) {
+                                    vm.calculateFilteredTotals();
+                                }
+
+                                return matchPos3 && matchPos7 && matchPos1; // Retorna verdadero si coinciden ambos filtros
+                            });
                         },
-                        {
-                            data: 'BUILD_CODE'
-                        },
-                        {
-                            data: 'CREATE_TS'
-                        },
-                        {
-                            data: 'ShipSerial'
-                        },
-                        {
-                            data: 'ShipLabelTimeStamp'
-                        },
-                    ],
-
-                    initComplete: function () {
-
-                        vm.initialTotal = data.length;
-                        // Agrega filtros personalizados usando `$.fn.dataTable.ext.search.push`
-                        $.fn.dataTable.ext.search.push(function (settings, rowData) {
-                            if (settings.nTable.id !== 'dataTables-example') {
-                                return true; // Si no es la tabla correcta, omitir el filtro
-                            }
-
-                            const code = rowData[1];
-                            const pos3Filter = vm.filterPos3;
-                            const pos7Filter = vm.filterPos7;
-                            const pos1Filter = vm.filter1and2;
-
-                            // Condiciones de filtro en posiciones 3 y 7
-                            const matchPos3 = pos3Filter ? code[2] === pos3Filter : true;
-                            const matchPos7 = pos7Filter ? code[6] === pos7Filter : true;
-                            const matchPos1 = pos1Filter ? code.substring(0, 2) === pos1Filter : true;
-
-                            if (vm.table) {
+                        drawCallback: function () {
+                            if (vm.isTableInitial) {
                                 vm.calculateFilteredTotals();
                             }
-
-                            return matchPos3 && matchPos7 && matchPos1; // Retorna verdadero si coinciden ambos filtros
-                        });
-                    },
-                    drawCallback: function () {
-                        if (vm.table) {
-                            vm.calculateFilteredTotals();
+                        },
+                        error: function () {
+                            reject(new Error("Error al inicializar DataTables"));
                         }
-                    },
-                });
-            }
+                    });
+                }
+
+            });
 
         },
 
@@ -503,21 +535,31 @@ export default {
                 Categoria: category,
                 Total: categoryCounts[category],
                 Porcentaje: ((categoryCounts[category] / this.initialTotal) * 100).toFixed(2),
-                Porcentaje1and2: this.total12 
-                ? ((categoryCounts[category] / this.total12) * 100).toFixed(2) // Respecto al primer filtro
-                : null,
-                
+                Porcentaje1and2: this.total12 ?
+                    ((categoryCounts[category] / this.total12) * 100).toFixed(2) // Respecto al primer filtro
+                    :
+                    null,
+
             }));
         },
 
     },
     //COMPONENT
     computed: {
-        filteredData() {
-            // Obtiene solo los datos aplicados con filtros
-            return this.table.rows({
-                filter: 'applied'
-            }).data().toArray();
+        /* filteredData() {
+             // Obtiene solo los datos aplicados con filtros
+             return this.table.rows({
+                 filter: 'applied'
+             }).data().toArray();
+         },*/
+
+        //SE AGREGO ESTO PARA EL FILTRADO CON COMPUTED
+        activeFilters() {
+            return {
+                pos3: this.filterPos3,
+                pos7: this.filterPos7,
+                pos1and2: this.filter1and2,
+            };
         }
     },
 
